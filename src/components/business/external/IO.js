@@ -11,9 +11,9 @@ const logger = require('../../../utils/logger');
    * @param {*} url
    * @param {*} method
    */
-  const query = (data, url, method, token) =>{
+  const query = (data, url, method, token, headers) =>{
     return new Promise((resolve, reject) => {
-      let response = fetchApi(data, url, method, token);
+      let response = fetchApi(data, url, method, token, headers);
       response.then((response) => {
         if (response) {
           resolve(response);
@@ -25,11 +25,8 @@ const logger = require('../../../utils/logger');
     });
   }
 
-  const fetchApi = (data, url, method, token) => {
-    let headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Private-Merchant-Id': '3efe3f01cef54b4a8dd5d34ad275f6f8'
-    };
+  const fetchApi = (data, url, method, token, headersC) => {
+    let headers = {... headersC};
     if (token) {
       headers.Authorization = token;
     }
@@ -60,8 +57,8 @@ const logger = require('../../../utils/logger');
         })
         .catch(function (err) {
           logger(JSON.stringify(err), 'error')
+          console.error('error peticion', err.response);
           reject(err)
-          //console.error('error peticion', err);
         });
     });
   }
